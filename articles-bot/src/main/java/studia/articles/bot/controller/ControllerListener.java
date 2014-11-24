@@ -7,4 +7,5 @@ public interface ControllerListener {
 	void onFileException(Exception e);
 	void onOtherException(Exception e);
 	void onConnectionException(IOException e);
+	void onNothingFoundException(NothingFoundException e);
 }

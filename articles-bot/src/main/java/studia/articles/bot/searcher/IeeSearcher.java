@@ -36,7 +36,8 @@ public class IeeSearcher extends IeeConnector {
 	}
 
 	private void init() throws JsonParseException, JsonMappingException, IOException {
-		total = parser.parseTotal(search());
+		InputStream is = search();
+		total = parser.parseTotal(is);
 		initialized = true;
 		if (total > 0)
 			current = -99;
@@ -64,7 +65,7 @@ public class IeeSearcher extends IeeConnector {
 		queryBuilder.setSize(size);
 		if (current != 0)
 			queryBuilder.setStartingFrom(current);
-		return getInputStream(baseURL + queryBuilder.build(), true);
+		return getInputStream(baseURL + queryBuilder.build(), false);
 	}
 
 	public int getTotal() {

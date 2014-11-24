@@ -35,10 +35,11 @@ public abstract class IeeConnector {
 				conn = url.openConnection(proxy);
 			else
 				conn = url.openConnection();
-			conn.setConnectTimeout(10000);
+			conn.setConnectTimeout(100000);
 			conn.setRequestProperty(
 					"User-Agent",
 					"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36");
+			System.out.println(url);
 			conn.connect();
 			return conn.getInputStream();
 		} catch (IOException e) {

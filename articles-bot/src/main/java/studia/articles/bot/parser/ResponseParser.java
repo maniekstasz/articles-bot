@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import studia.articles.bot.controller.NothingFoundException;
 import studia.articles.bot.model.Document;
 import studia.articles.bot.model.Root;
 import studia.articles.bot.model.RootTotal;
@@ -28,6 +29,7 @@ public class ResponseParser {
 		Root root;
 		try {
 			root = xmlMapper.readValue(stream, Root.class);
+			if(root.getDocuments() == null) throw new NothingFoundException ();
 			return root.getDocuments();
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
@@ -44,6 +46,7 @@ public class ResponseParser {
 
 	public Integer parseTotal(InputStream stream) throws JsonParseException, JsonMappingException, IOException {
 		RootTotal root = xmlMapper.readValue(stream, RootTotal.class);
+		if(root.getTotalFound() == null) throw new NothingFoundException ();
 		return root.getTotalFound();
 	}
 }

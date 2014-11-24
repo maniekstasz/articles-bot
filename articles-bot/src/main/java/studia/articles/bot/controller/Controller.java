@@ -52,6 +52,8 @@ public class Controller {
 		try {
 			searcher = connectorFactory.getIeeSearcher(builder, parser);
 			return searcher.getTotal();
+		}catch(NothingFoundException e){
+			listener.onNothingFoundException(e);
 		} catch (JsonParseException | JsonMappingException e) {
 			listener.onOtherException(e);
 		} catch (IOException e) {
@@ -73,6 +75,8 @@ public class Controller {
 			return searcher.next();
 		} catch (IOException e) {
 			listener.onConnectionException(e);
+		}catch(NothingFoundException e){
+			listener.onNothingFoundException(e);
 		}
 		return null;
 	}
@@ -82,6 +86,8 @@ public class Controller {
 			return searcher.prev();
 		} catch (IOException e) {
 			listener.onConnectionException(e);
+		}catch(NothingFoundException e){
+			listener.onNothingFoundException(e);
 		}
 		return null;
 	}

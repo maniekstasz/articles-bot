@@ -10,24 +10,10 @@ public class SearchQueryBuilder {
 	private final String RECORD_NUMBER = "hc";
 	private final String STARTING_FROM = "rs";
 
-	public enum Parameter {
-		AUTHOR("au"), TITLE("ti"), ISBN("isbn"), YEAR_FROM("pys"), YEAR_TO(
-				"pye"), EVERYWHERE("md");
-		private final String value;
-
-		Parameter(String value) {
-			this.value = value;
-		}
-
-		public String value() {
-			return value;
-		}
-	}
-
 	private Map<String, Object> parameters = new HashMap<String, Object>();
 
 	public SearchQueryBuilder append(Parameter parameter, Object value) {
-		parameters.put(parameter.value, value);
+		parameters.put(parameter.value(), value);
 		return this;
 	}
 

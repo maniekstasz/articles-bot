@@ -43,6 +43,7 @@ public class PDFDownloader extends IeeConnector {
 		String pdfUrl = extractPdfUrl(urlStr);
 		if (pdfUrl == null)
 			return;
+		try{
 		InputStream inputStream = getInputStream(pdfUrl, true);
 		String saveFilePath = getAbsolutePath(fileName);
 		outputStream = new FileOutputStream(saveFilePath);
@@ -50,6 +51,9 @@ public class PDFDownloader extends IeeConnector {
 		byte[] buffer = new byte[BUFFER_SIZE];
 		while ((bytesRead = inputStream.read(buffer)) != -1) {
 			outputStream.write(buffer, 0, bytesRead);
+		}
+		}finally{
+			outputStream.close();
 		}
 	}
 

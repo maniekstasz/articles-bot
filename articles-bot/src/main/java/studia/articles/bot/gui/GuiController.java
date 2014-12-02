@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -20,6 +22,7 @@ import studia.articles.bot.model.Document;
 import studia.articles.bot.searcher.SearchQueryBuilder;
 
 public class GuiController {
+	final static private String TITLE="title";
 	JFrame frame;
 	SearchPanel searchPanel;
 	ResultsPanel resultsPanel;
@@ -27,15 +30,15 @@ public class GuiController {
 
 	public GuiController() {
 		init();
+		initMenu();
 		frame.setVisible(true);
 	}
 
 	private void init() {
 		frame = new JFrame();
-		frame.setSize(new Dimension(1120, 400));
+		frame.setSize(new Dimension(1200, 400));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setTitle("title");
-		initMenu();
+		frame.setTitle(TITLE);
 		searchPanel = new SearchPanel(this);
 		resultsPanel = new ResultsPanel(this);
 		frame.setLayout(new BorderLayout());
@@ -56,17 +59,37 @@ public class GuiController {
 	}
 
 	public void search(SearchQueryBuilder searchQueryBuilder) {
-		int r = controller.search(searchQueryBuilder);
-		List<Document> list = new ArrayList<Document>();
-		if (r > 0) {
-			
-			while (controller.hasNext()) {
-				list.addAll(controller.next());
-			}
-			
-
+		int n = controller.search(searchQueryBuilder);
+		resultsPanel.setNewSearch(n);
+		if (n > 0) {
+			next();
 		}
-		resultsPanel.addResults(list);
+
+	}
+
+	public void next() {
+		resultsPanel.addResults(controller.next());
+	}
+
+	public void prev() {
+		resultsPanel.addResults(controller.prev());
+	}
+
+	public boolean hasNext() {
+		return controller.hasNext();
+	}
+
+	public boolean hasPrev() {
+		return controller.hasPrev();
+	}
+
+	public Controller getController() {
+		// TODO Auto-generated method stub
+		return this.controller;
+	}
+
+	public JFrame getFrame() {
+		return frame;
 	}
 
 }

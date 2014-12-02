@@ -67,7 +67,7 @@ public class Controller {
 	}
 
 	public boolean hasPrev() {
-		return searcher.hasNext();
+		return searcher.hasPrev();
 	}
 
 	public List<Document> next() {

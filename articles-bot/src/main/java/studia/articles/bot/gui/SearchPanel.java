@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -16,14 +15,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import studia.articles.bot.searcher.Parameter;
 import studia.articles.bot.searcher.SearchQueryBuilder;
 
 public class SearchPanel extends JPanel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2523191301599186668L;
 	private Map<Parameter, JComponent> parFieldMap = new TreeMap<Parameter, JComponent>();
 	private JButton searchButton = new JButton("Search");
@@ -65,6 +63,7 @@ public class SearchPanel extends JPanel {
 				}
 
 				guiController.search(builder);
+		
 
 			}
 		});
@@ -86,7 +85,9 @@ public class SearchPanel extends JPanel {
 				comp = new JTextField();
 
 			} else {
+				
 				String[] array = list.toArray(new String[list.size()]);
+				array = ArrayUtils.addAll(new String[]{""}, array);
 				if (!par.isMultipleSelect()) {
 					comp = new JComboBox<String>(array);
 				} else {

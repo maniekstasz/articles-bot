@@ -7,11 +7,12 @@ import java.util.List;
 
 public enum Parameter {
 
-	AUTHOR("au", null, false), TITLE("ti", null, false), ISBN("isbn", null,
-			false), DOI("doi", null, false), YEAR_FROM("pys",
-			createYearList(), false), YEAR_TO("pye", createYearList(), false), EVERYWHERE(
-			"md", null, false), CONTENT_TYPE("ctype", createContentType(), true), OPEN_ACCESSS(
-			"oa", createOpenAccessList(), true), SORT_FIELD("sortfield",
+	AUTHOR("au", null, false), TITLE("ti", null, false), ABSTRACT("ab", null,
+			false), ISBN("isbn", null, false), DOI("doi", null, false), YEAR_FROM(
+			"pys", createYearList(), false), YEAR_TO("pye", createYearList(),
+			false), CONTENT_TYPE("ctype", createContentType(), true), OPEN_ACCESSS(
+			"oa", createOpenAccessList(), true), IN_METADATA("md", null, false), METADATA_AND_ARTICLE(
+			"querytext", null, false), SORT_FIELD("sortfield",
 			createSortFieldList(), false), SORT_ORDER("sortorder",
 			createSortOrderList(), false);
 

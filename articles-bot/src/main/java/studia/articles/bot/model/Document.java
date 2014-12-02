@@ -19,6 +19,7 @@ public class Document {
 	private String year;
 	@JacksonXmlProperty(localName = "pdf")
 	private String pdfUrl;
+	
 	@JacksonXmlProperty(localName = "abstract")
 	private String abstr;
 
@@ -102,4 +103,7 @@ public class Document {
 	private String prepare(String str) {
 		return str.toLowerCase().replaceAll(" ", "");
 	}
+
+	
+	
 }

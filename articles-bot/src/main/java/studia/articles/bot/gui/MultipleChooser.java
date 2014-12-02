@@ -29,7 +29,7 @@ public class MultipleChooser extends JButton {
 		for (String s : list) {
 			JCheckBoxMenuItem item = new JCheckBoxMenuItem(s);
 			item.setUI(new StayOpenCheckBoxMenuItemUI());
-			item.setSelected(true);
+			item.setSelected(false);
 			menu.add(item);
 		}
 

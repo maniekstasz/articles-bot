@@ -15,7 +15,10 @@ public class ControllerListenerImp implements ControllerListener {
 
 	@Override
 	public void onFileException(Exception e) {
-		// TODO Auto-generated method stub
+		JOptionPane.showMessageDialog(null,
+			    e.getMessage(),
+			    "file error",
+			    JOptionPane.ERROR_MESSAGE);
 		
 	}
 

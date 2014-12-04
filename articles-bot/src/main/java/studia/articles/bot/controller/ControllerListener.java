@@ -8,4 +8,5 @@ public interface ControllerListener {
 	void onOtherException(Exception e);
 	void onConnectionException(IOException e);
 	void onNothingFoundException(NothingFoundException e);
+	void onFileDownloadingFinish(boolean success, String title, int total,int currentNumber);
 }

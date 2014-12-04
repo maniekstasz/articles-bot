@@ -38,13 +38,14 @@ public class Controller {
 	private final ControllerListener listener;
 	private ConnectorFactory connectorFactory;
 
-	public Controller(ControllerListener listener,String socksAddress, int socksPort,
-			int throughPort) {
+	public Controller(ControllerListener listener, String socksAddress,
+			int socksPort, int throughPort) {
 		this.listener = listener;
-		connectorFactory = new ConnectorFactory(socksAddress, socksPort, throughPort);
+		connectorFactory = new ConnectorFactory(socksAddress, socksPort,
+				throughPort);
 	}
-	
-	public Controller(ControllerListener listener){
+
+	public Controller(ControllerListener listener) {
 		this(listener, "127.0.0.1", 80, 8080);
 	}
 
@@ -52,7 +53,7 @@ public class Controller {
 		try {
 			searcher = connectorFactory.getIeeSearcher(builder, parser);
 			return searcher.getTotal();
-		}catch(NothingFoundException e){
+		} catch (NothingFoundException e) {
 			listener.onNothingFoundException(e);
 		} catch (JsonParseException | JsonMappingException e) {
 			listener.onOtherException(e);
@@ -75,7 +76,7 @@ public class Controller {
 			return searcher.next();
 		} catch (IOException e) {
 			listener.onConnectionException(e);
-		}catch(NothingFoundException e){
+		} catch (NothingFoundException e) {
 			listener.onNothingFoundException(e);
 		}
 		return null;
@@ -86,7 +87,7 @@ public class Controller {
 			return searcher.prev();
 		} catch (IOException e) {
 			listener.onConnectionException(e);
-		}catch(NothingFoundException e){
+		} catch (NothingFoundException e) {
 			listener.onNothingFoundException(e);
 		}
 		return null;
@@ -122,26 +123,36 @@ public class Controller {
 
 					BibTeXDatabase database = bibtexParser
 							.parse(new FileReader(bibetexDatabasePath));
-					PDFDownloader downloader = connectorFactory.getPdfDownloader(filesPath);
+					PDFDownloader downloader = connectorFactory
+							.getPdfDownloader(filesPath);
 					int i = 0;
+					boolean success = false;
 					for (BibTeXEntry en : database.getEntries().values()) {
 						String fileName = en.getKey().getValue();
-						listener.onFileDownloadingStart(
-								en.getField(BibTeXEntry.KEY_TITLE).toUserString(),
-								database.getEntries().size(), i++);
+						String title = en.getField(BibTeXEntry.KEY_TITLE)
+								.toUserString();
+						listener.onFileDownloadingStart(title, database
+								.getEntries().size(), i);
+						
 						try {
 							downloader.downloadAndSave(
 									en.getField(new Key("pdfUrl"))
 											.toUserString(), fileName);
+							success = true;
 						} catch (IOException e) {
 							if (e instanceof ConnectionException) {
-								listener.onConnectionException(e);
+								//listener.onConnectionException(e);
 							} else {
 								listener.onFileException(e);
 							}
-							if(downloader.fileExists(fileName))
-								new File(downloader.getAbsolutePath(fileName)).delete();
-							break;
+							if (downloader.fileExists(fileName)) {
+								new File(downloader.getAbsolutePath(fileName))
+										.delete();
+							}
+						} finally {
+							listener.onFileDownloadingFinish(success, title,database
+									.getEntries().size(), i);
+							i++;
 						}
 					}
 

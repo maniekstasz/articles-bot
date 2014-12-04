@@ -22,13 +22,14 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
+import studia.articles.bot.controller.Controller;
 import studia.articles.bot.model.Document;
 
 public class ResultsPanel extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 6702190242865534412L;
 	private GuiController guiController;
-	private DefaultTableModel myTableModel;
+	private MyTableModel myTableModel;
 	private JButton nextButton;
 	private JButton prevButton;
 	private JButton saveBibtex;
@@ -41,7 +42,8 @@ public class ResultsPanel extends JPanel implements ActionListener {
 
 	public ResultsPanel(GuiController guiController) {
 		this.guiController = guiController;
-		initMyTableModel(new String[] { "Title", "authors", "year", "save?" });
+		myTableModel = new MyTableModel(new String[] { "Title", "authors",
+				"year", "save?" });
 		this.setLayout(new BorderLayout());
 		add(createNavigatePanel(), BorderLayout.NORTH);
 		add(createTableScrollPane(), BorderLayout.CENTER);
@@ -70,6 +72,7 @@ public class ResultsPanel extends JPanel implements ActionListener {
 			myTableModel.addRow(new Object[] { doc.getTitle(), doc.getAuthor(),
 					doc.getYear(), new Boolean(false) });
 		}
+		selectSaved();
 
 	}
 
@@ -79,6 +82,8 @@ public class ResultsPanel extends JPanel implements ActionListener {
 		pageCounter = 1;
 		nextButton.setEnabled(false);
 		prevButton.setEnabled(false);
+		saveBibtex.setEnabled(false);
+		selectAll.setEnabled(false);
 
 		numberOfResults = n;
 		fillInfoLabel();
@@ -86,37 +91,11 @@ public class ResultsPanel extends JPanel implements ActionListener {
 		if (n > 0) {
 			saveBibtex.setEnabled(true);
 			selectAll.setEnabled(true);
-			if (guiController.hasNext()) {
+			System.out.println(n);
+			if (n > 100) {
 				nextButton.setEnabled(true);
 			}
 
-		}
-
-	}
-
-	private void initMyTableModel(String[] columnNames) {
-
-		myTableModel = new DefaultTableModel() {
-			private static final long serialVersionUID = 1L;
-
-			public Class<?> getColumnClass(int colIndex) {
-
-				return getValueAt(0, colIndex).getClass();
-
-			}
-
-			@Override
-			public boolean isCellEditable(int row, int col) {
-				if (col == this.getColumnCount() - 1) {
-					return true;
-				}
-				return false;
-			}
-
-		};
-
-		for (String s : columnNames) {
-			myTableModel.addColumn(s);
 		}
 
 	}
@@ -167,15 +146,27 @@ public class ResultsPanel extends JPanel implements ActionListener {
 		column.setMinWidth(40);
 
 		table.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
+			public void mouseReleased(MouseEvent e) {
+				JTable target = (JTable) e.getSource();
+				int row = target.getSelectedRow();
+				int col = target.getSelectedColumn();
+				int lastColumn = myTableModel.getColumnCount() - 1;
 
-				if (e.getClickCount() == 2) {
-					JTable target = (JTable) e.getSource();
-					int row = target.getSelectedRow();
-					if (currentlyDisplayedDocuments.size() > row) {
-						new DocumentInfoFrame(currentlyDisplayedDocuments
-								.get(row));
+				if (row >= currentlyDisplayedDocuments.size()) {
+					return;
+				}
+
+				if (col == lastColumn) {
+					Document clicked = currentlyDisplayedDocuments.get(row);
+					if ((boolean) myTableModel.getValueAt(row, col)) {
+						guiController.getController().save(clicked);
+					} else {
+						guiController.getController().delete(clicked);
 					}
+				}
+
+				if (e.getClickCount() == 2 && col < lastColumn) {
+					new DocumentInfoFrame(currentlyDisplayedDocuments.get(row));
 				}
 			}
 		});
@@ -204,56 +195,35 @@ public class ResultsPanel extends JPanel implements ActionListener {
 
 	private void saveBibtex() {
 
-		int i = 0;
-		int count = 0;
+		try {
+			JFileChooser fc = new JFileChooser();
+			int returnVal = fc.showOpenDialog(guiController.getFrame());
 
-		Vector vec = myTableModel.getDataVector();
-		for (Object row : vec) {
-
-			boolean save = (boolean) (((Vector) row).lastElement());
-			if (save) {
-				guiController.getController().save(
-						currentlyDisplayedDocuments.get(i));
-				count++;
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				File file = fc.getSelectedFile();
+				guiController.getController().saveToBibetex(
+						file.getAbsolutePath());
 			}
-			i++;
 
-		}
-		if (count > 0) {
-			
-			try {
-				JFileChooser fc = new JFileChooser();
-				int returnVal = fc.showOpenDialog(guiController.getFrame());
-
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-					guiController.getController().saveToBibetex(
-							file.getAbsolutePath());
-				}
-
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-		} else {
-			JOptionPane.showMessageDialog(guiController.getFrame(),
-					"Not selected item.", "", JOptionPane.ERROR_MESSAGE);
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
 
 	}
 
 	private void selectAll() {
 		int lastColumn = myTableModel.getColumnCount() - 1;
+		Controller controller = guiController.getController();
 		for (int i = 0; i < myTableModel.getRowCount(); i++) {
 
 			myTableModel.setValueAt(true, i, lastColumn);
+			controller.save(currentlyDisplayedDocuments.get(i));
 
 		}
 	}
 
 	private void downloadPdf() {
-		
-		
-		
+
 		JFileChooser fc = new JFileChooser();
 		fc.setDialogTitle("select bibtex file");
 
@@ -287,6 +257,16 @@ public class ResultsPanel extends JPanel implements ActionListener {
 		fillInfoLabel();
 		prevButton.setEnabled(guiController.hasPrev());
 		nextButton.setEnabled(guiController.hasNext());
+	}
+
+	private void selectSaved() {
+		Controller controller = guiController.getController();
+		int lastColumn = myTableModel.getColumnCount() - 1;
+		for (int i = 0; i < currentlyDisplayedDocuments.size(); i++) {
+			if (controller.isSaved(currentlyDisplayedDocuments.get(i))) {
+				myTableModel.setValueAt(true, i, lastColumn);
+			}
+		}
 	}
 
 }

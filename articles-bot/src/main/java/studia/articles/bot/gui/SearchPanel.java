@@ -35,10 +35,11 @@ public class SearchPanel extends JPanel {
 		initializeMap();
 		initializeSearchButton();
 		addComponents();
-
+		guiController.getFrame().getRootPane().setDefaultButton(searchButton);
 	}
 
 	private void initializeSearchButton() {
+		
 		searchButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -67,7 +68,7 @@ public class SearchPanel extends JPanel {
 
 			}
 		});
-
+		
 	}
 
 	private void addComponents() {

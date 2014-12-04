@@ -1,24 +1,14 @@
 package studia.articles.bot.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 
 import studia.articles.bot.controller.Controller;
-import studia.articles.bot.controller.ControllerListenerImp;
-import studia.articles.bot.model.Document;
 import studia.articles.bot.searcher.SearchQueryBuilder;
 
 public class GuiController {
@@ -26,11 +16,13 @@ public class GuiController {
 	JFrame frame;
 	SearchPanel searchPanel;
 	ResultsPanel resultsPanel;
-	Controller controller = new Controller(new ControllerListenerImp());
+	Controller controller;
 
-	public GuiController() {
+	public GuiController(Controller controller) {
+		this.controller=controller;
 		init();
 		initMenu();
+		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.setVisible(true);
 	}
 
@@ -61,7 +53,7 @@ public class GuiController {
 	public void search(SearchQueryBuilder searchQueryBuilder) {
 		int n = controller.search(searchQueryBuilder);
 		resultsPanel.setNewSearch(n);
-		if (n > 0) {
+		if (n>0) {  //nie moze byc hasNext bo searcher moze byc null
 			next();
 		}
 

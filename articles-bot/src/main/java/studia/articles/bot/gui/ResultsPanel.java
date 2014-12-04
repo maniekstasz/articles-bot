@@ -166,7 +166,7 @@ public class ResultsPanel extends JPanel implements ActionListener {
 				}
 
 				if (e.getClickCount() == 2 && col < lastColumn) {
-					new DocumentInfoFrame(currentlyDisplayedDocuments.get(row));
+					new DocumentInfoFrame(currentlyDisplayedDocuments.get(row), guiController);
 				}
 			}
 		});

@@ -19,10 +19,17 @@ public abstract class IeeConnector {
 	private InetSocketAddress addr;
 	private Proxy proxy;
 
+	private boolean throughProxy = false;
 	public IeeConnector(String socksAddress, int socksPort, int throughPort) {
 		addr = new InetSocketAddress(socksAddress, socksPort).createUnresolved(
 				"localhost", throughPort);
 		proxy = new Proxy(Proxy.Type.SOCKS, addr);
+		CookieHandler.setDefault(new CookieManager());
+		throughProxy = true;
+	}
+	
+	public IeeConnector(){
+		throughProxy = false;
 		CookieHandler.setDefault(new CookieManager());
 	}
 
@@ -31,7 +38,7 @@ public abstract class IeeConnector {
 		try {
 			URL url = new URL(urlStr);
 			URLConnection conn = null;
-			if (throughProxy)
+			if (throughProxy && this.throughProxy)
 				conn = url.openConnection(proxy);
 			else
 				conn = url.openConnection();

@@ -27,6 +27,11 @@ public class PDFDownloader extends IeeConnector {
 		this.path = path;
 	}
 
+	public PDFDownloader(String path) {
+		super();
+		this.path = path;
+	}
+
 	public boolean fileExists(String fileName) {
 		return new File(getAbsolutePath(fileName)).exists();
 	}
@@ -35,24 +40,25 @@ public class PDFDownloader extends IeeConnector {
 		return path + File.separator + fileName + ".pdf";
 	}
 
-	public void downloadAndSave(String urlStr, String fileName)
+	public String downloadAndSave(String urlStr, String fileName)
 			throws IOException {
 		if (fileExists(fileName))
-			return;
+			return null;
 		FileOutputStream outputStream = null;
 		String pdfUrl = extractPdfUrl(urlStr);
 		if (pdfUrl == null)
-			return;
-		try{
-		InputStream inputStream = getInputStream(pdfUrl, true);
-		String saveFilePath = getAbsolutePath(fileName);
-		outputStream = new FileOutputStream(saveFilePath);
-		int bytesRead = -1;
-		byte[] buffer = new byte[BUFFER_SIZE];
-		while ((bytesRead = inputStream.read(buffer)) != -1) {
-			outputStream.write(buffer, 0, bytesRead);
-		}
-		}finally{
+			return null;
+		try {
+			InputStream inputStream = getInputStream(pdfUrl, true);
+			String saveFilePath = getAbsolutePath(fileName);
+			outputStream = new FileOutputStream(saveFilePath);
+			int bytesRead = -1;
+			byte[] buffer = new byte[BUFFER_SIZE];
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				outputStream.write(buffer, 0, bytesRead);
+			}
+			return saveFilePath;
+		} finally {
 			outputStream.close();
 		}
 	}

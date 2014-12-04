@@ -23,9 +23,10 @@ public class DocumentInfoFrame extends JFrame {
 	private static final long serialVersionUID = 1995430866542162143L;
 	private Document document;
 	private JButton openPDFButton=new JButton("full text");
-
-	public DocumentInfoFrame(Document document) {
+	private GuiController guiController;
+	public DocumentInfoFrame(Document document, GuiController guiController) {
 		this.document = document;
+		this.guiController = guiController;
 		this.setSize(700, 600);
 		this.setTitle(document.getTitle());
 		fill();
@@ -57,7 +58,10 @@ public class DocumentInfoFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (Desktop.isDesktopSupported()) {
 				    try {
-				        File myFile = new File("test.pdf");
+				    	String fileAbsolutePath = guiController.getController().downloadDocument(document);
+				    	System.out.println(fileAbsolutePath);
+				    	if(fileAbsolutePath == null) return;
+				        File myFile = new File(fileAbsolutePath);
 				        Desktop.getDesktop().open(myFile);
 				    } catch (IOException ex) {
 				    	//custom title, error icon

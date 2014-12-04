@@ -197,12 +197,25 @@ public class ResultsPanel extends JPanel implements ActionListener {
 
 		try {
 			JFileChooser fc = new JFileChooser();
+			fc.setDialogTitle("Save bibtex as");
 			int returnVal = fc.showOpenDialog(guiController.getFrame());
 
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				File file = fc.getSelectedFile();
 				guiController.getController().saveToBibetex(
 						file.getAbsolutePath());
+				//*********************
+				Object[] options = { "Yes, please", "No, thanks" };
+				int n = JOptionPane
+						.showOptionDialog(guiController.getFrame(),
+								"Would you like to download pdf files? ", "",
+								JOptionPane.YES_NO_OPTION,
+								JOptionPane.QUESTION_MESSAGE, null, options,
+								options[0]);
+				if (n == 0) {
+					selectDirAndDownload(file.getAbsolutePath());
+				}
+
 			}
 
 		} catch (IOException e1) {
@@ -225,21 +238,26 @@ public class ResultsPanel extends JPanel implements ActionListener {
 	private void downloadPdf() {
 
 		JFileChooser fc = new JFileChooser();
-		fc.setDialogTitle("select bibtex file");
+		fc.setDialogTitle("Select bibtex file");
 
 		int returnVal = fc.showOpenDialog(guiController.getFrame());
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File bibtexFile = fc.getSelectedFile();
-			fc.setDialogTitle("select dictionary to save pdf files");
-			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			returnVal = fc.showOpenDialog(guiController.getFrame());
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				File dirPath = fc.getSelectedFile();
-				guiController.getController()
-						.downloadFiles(bibtexFile.getAbsolutePath(),
-								dirPath.getAbsolutePath());
-			}
+			
+			selectDirAndDownload(bibtexFile.getAbsolutePath());
 
+		}
+	}
+
+	private void selectDirAndDownload(String bibtexPath) {
+		JFileChooser fc = new JFileChooser();
+		fc.setDialogTitle("Select directory to save pdf files");
+		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		int returnVal = fc.showOpenDialog(guiController.getFrame());
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File dirPath = fc.getSelectedFile();
+			guiController.getController().downloadFiles(bibtexPath,
+					dirPath.getAbsolutePath());
 		}
 	}
 

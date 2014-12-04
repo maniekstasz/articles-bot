@@ -34,6 +34,13 @@ public class IeeSearcher extends IeeConnector {
 			String socksAddress, int socksPort, int throughPort) throws JsonParseException, JsonMappingException, IOException {
 		this(queryBuilder, parser, 100, socksAddress, socksPort, throughPort);
 	}
+	
+	public IeeSearcher(SearchQueryBuilder queryBuilder, ResponseParser parser)throws JsonParseException, JsonMappingException, IOException {
+		this.queryBuilder = queryBuilder;
+		this.parser = parser;
+		this.size = 100;
+		init();
+	}
 
 	private void init() throws JsonParseException, JsonMappingException, IOException {
 		InputStream is = search();

@@ -17,11 +17,13 @@ import org.jbibtex.Key;
 import org.jbibtex.ObjectResolutionException;
 import org.jbibtex.ParseException;
 import org.jbibtex.TokenMgrException;
+import org.jbibtex.Value;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import studia.articles.bot.bibtex.BibeteXDatabaseBuilder;
+import studia.articles.bot.bibtex.BibtexUtil;
 import studia.articles.bot.model.Document;
 import studia.articles.bot.parser.ResponseParser;
 import studia.articles.bot.searcher.ConnectorFactory;
@@ -46,7 +48,8 @@ public class Controller {
 	}
 
 	public Controller(ControllerListener listener) {
-		this(listener, "127.0.0.1", 80, 8080);
+		this.listener = listener;
+		connectorFactory = new ConnectorFactory();
 	}
 
 	public int search(SearchQueryBuilder builder) {
@@ -111,6 +114,22 @@ public class Controller {
 		new BibTeXFormatter().format(database, new FileWriter(path));
 	}
 
+	public String downloadDocument(final Document document) {
+		PDFDownloader downloader = connectorFactory.getPdfDownloader(System
+				.getProperty("java.io.tmpdir"));
+		try {
+			return downloader.downloadAndSave(document.getPdfUrl(),
+					BibtexUtil.getBibTexKey(document));
+		} catch (IOException e) {
+			if (e instanceof ConnectionException) {
+				listener.onConnectionException(e);
+			} else {
+				listener.onFileException(e);
+			}
+		}
+		return null;
+	}
+
 	public void downloadFiles(final String bibetexDatabasePath,
 			final String filesPath) {
 		new Thread(new Runnable() {
@@ -133,15 +152,18 @@ public class Controller {
 								.toUserString();
 						listener.onFileDownloadingStart(title, database
 								.getEntries().size(), i);
-						
+
 						try {
-							downloader.downloadAndSave(
-									en.getField(new Key("pdfUrl"))
-											.toUserString(), fileName);
+							Value pdfURL = en.getField(new Key("pdfUrl"));
+							if (pdfURL == null)
+								throw new IOException(
+										"No pdf url field in bibetext");
+							downloader.downloadAndSave(pdfURL.toUserString(),
+									fileName);
 							success = true;
 						} catch (IOException e) {
 							if (e instanceof ConnectionException) {
-								//listener.onConnectionException(e);
+								// listener.onConnectionException(e);
 							} else {
 								listener.onFileException(e);
 							}
@@ -150,8 +172,8 @@ public class Controller {
 										.delete();
 							}
 						} finally {
-							listener.onFileDownloadingFinish(success, title,database
-									.getEntries().size(), i);
+							listener.onFileDownloadingFinish(success, title,
+									database.getEntries().size(), i);
 							i++;
 						}
 					}

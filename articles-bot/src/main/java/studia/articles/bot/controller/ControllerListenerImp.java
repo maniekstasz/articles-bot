@@ -17,7 +17,7 @@ public class ControllerListenerImp implements ControllerListener {
 	private JFrame downloadingFrame;
 	JTextPane jTextPane;
 	DownloadInfoBuilde downloadInfoBuilder;
-	int completed=0;
+	int completed = 0;
 
 	@Override
 	public void onFileDownloadingStart(String title, int total,
@@ -44,8 +44,8 @@ public class ControllerListenerImp implements ControllerListener {
 		JScrollPane jsp = new JScrollPane(jTextPane);
 		downloadingFrame.add(jsp);
 		downloadingFrame.setVisible(true);
-	
 		downloadInfoBuilder = new DownloadInfoBuilde();
+		completed = 0;
 	}
 
 	@Override
@@ -59,7 +59,6 @@ public class ControllerListenerImp implements ControllerListener {
 	public void onOtherException(Exception e) {
 		JOptionPane.showMessageDialog(null, e.getMessage(), "file error",
 				JOptionPane.ERROR_MESSAGE);
-
 
 	}
 
@@ -78,17 +77,18 @@ public class ControllerListenerImp implements ControllerListener {
 	}
 
 	@Override
-	public void onFileDownloadingFinish(boolean success, String title, int total,
-			int currentNumber) {
-		if(success){
+	public void onFileDownloadingFinish(boolean success, String title,
+			int total, int currentNumber) {
+		if (success) {
 			completed++;
 		}
 		downloadInfoBuilder.setLastResult(success, title);
 		jTextPane.setText(downloadInfoBuilder.getContent());
-		
-		if(currentNumber==(total-1)){
-			
-		downloadingFrame.setTitle("finished (downloaded: "+completed+" of "+total+")");
+
+		if (currentNumber == (total - 1)) {
+
+			downloadingFrame.setTitle("finished (downloaded: " + completed
+					+ " of " + total + ")");
 		}
 	}
 

@@ -43,7 +43,7 @@ public class PDFDownloader extends IeeConnector {
 	public String downloadAndSave(String urlStr, String fileName)
 			throws IOException {
 		if (fileExists(fileName))
-			return null;
+			return getAbsolutePath(fileName);
 		FileOutputStream outputStream = null;
 		String pdfUrl = extractPdfUrl(urlStr);
 		if (pdfUrl == null)

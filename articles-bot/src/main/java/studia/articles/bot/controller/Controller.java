@@ -17,6 +17,7 @@ import org.jbibtex.Key;
 import org.jbibtex.ObjectResolutionException;
 import org.jbibtex.ParseException;
 import org.jbibtex.TokenMgrException;
+import org.jbibtex.Value;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -46,13 +47,9 @@ public class Controller {
 				throughPort);
 	}
 
-	// public Controller(ControllerListener listener) {
-	// this.listener = listener;
-	// connectorFactory = new ConnectorFactory();
-	// }
-
 	public Controller(ControllerListener listener) {
-		this(listener, "127.0.0.1", 80, 8080);
+		this.listener = listener;
+		connectorFactory = new ConnectorFactory();
 	}
 
 	public int search(SearchQueryBuilder builder) {
@@ -157,9 +154,12 @@ public class Controller {
 								.getEntries().size(), i);
 
 						try {
-							downloader.downloadAndSave(
-									en.getField(new Key("pdfUrl"))
-											.toUserString(), fileName);
+							Value pdfURL = en.getField(new Key("pdfUrl"));
+							if (pdfURL == null)
+								throw new IOException(
+										"No pdf url field in bibetext");
+							downloader.downloadAndSave(pdfURL.toUserString(),
+									fileName);
 							success = true;
 						} catch (IOException e) {
 							if (e instanceof ConnectionException) {

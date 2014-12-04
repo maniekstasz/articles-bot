@@ -2,17 +2,16 @@ package studia.articles.bot.gui;
 
 import java.awt.Color;
 
-public class DownloadInfoBuilde {
+public class DownloadInfoBuilder {
 	
 	private final static String SUCCESS_TEXT=" (success)";
 	private final static String ERROR_TEXT=" (error)";
 	private final static String IN_PROGRESS=" (in progress)";
 
 	private int count=0;
-	StringBuilder builder;
-	String last;
+	private StringBuilder builder;
 
-	public DownloadInfoBuilde() {
+	public DownloadInfoBuilder() {
 		builder = new StringBuilder();
 		builder.append("<html>");
 	}

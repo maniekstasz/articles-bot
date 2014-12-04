@@ -21,7 +21,6 @@ public class GuiController {
 	public GuiController(Controller controller) {
 		this.controller=controller;
 		init();
-		initMenu();
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.setVisible(true);
 	}
@@ -39,16 +38,7 @@ public class GuiController {
 
 	}
 
-	private void initMenu() {
-		JMenuBar menuBar = new JMenuBar();
-		frame.setJMenuBar(menuBar);
 
-		JMenu mnNewMenu = new JMenu("Settings");
-		menuBar.add(mnNewMenu);
-
-		JMenuItem mntmNewMenuItem = new JMenuItem("Proxy settings");
-		mnNewMenu.add(mntmNewMenuItem);
-	}
 
 	public void search(SearchQueryBuilder searchQueryBuilder) {
 		int n = controller.search(searchQueryBuilder);

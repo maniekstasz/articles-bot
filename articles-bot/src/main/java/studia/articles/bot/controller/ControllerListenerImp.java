@@ -1,6 +1,5 @@
 package studia.articles.bot.controller;
 
-import java.awt.Font;
 import java.io.IOException;
 
 import javax.swing.JFrame;
@@ -8,15 +7,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
-import com.fasterxml.jackson.databind.deser.impl.ExternalTypeHandler.Builder;
-
-import studia.articles.bot.gui.DownloadInfoBuilde;
+import studia.articles.bot.gui.DownloadInfoBuilder;
 
 public class ControllerListenerImp implements ControllerListener {
 
 	private JFrame downloadingFrame;
 	JTextPane jTextPane;
-	DownloadInfoBuilde downloadInfoBuilder;
+	DownloadInfoBuilder downloadInfoBuilder;
 	int completed = 0;
 
 	@Override
@@ -44,7 +41,7 @@ public class ControllerListenerImp implements ControllerListener {
 		JScrollPane jsp = new JScrollPane(jTextPane);
 		downloadingFrame.add(jsp);
 		downloadingFrame.setVisible(true);
-		downloadInfoBuilder = new DownloadInfoBuilde();
+		downloadInfoBuilder = new DownloadInfoBuilder();
 		completed = 0;
 	}
 

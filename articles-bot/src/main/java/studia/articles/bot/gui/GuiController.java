@@ -21,7 +21,7 @@ public class GuiController {
 	public GuiController(Controller controller) {
 		this.controller=controller;
 		init();
-		//frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.setVisible(true);
 	}
 

@@ -10,15 +10,13 @@ import studia.articles.bot.parser.ResponseParser;
 public class ConnectorFactory {
 
 	private String socksAddress;
-	private int socksPort = -1;
 	private int throughPort = -1;
 
-	public ConnectorFactory(String socksAddress, int socksPort, int throughPort) {
+	public ConnectorFactory(String socksAddress, int throughPort) {
 		this.socksAddress = socksAddress;
-		this.socksPort = socksPort;
 		this.throughPort = throughPort;
 	}
-	
+
 	public ConnectorFactory() {
 
 	}
@@ -26,16 +24,16 @@ public class ConnectorFactory {
 	public IeeSearcher getIeeSearcher(SearchQueryBuilder builder,
 			ResponseParser parser) throws JsonParseException,
 			JsonMappingException, IOException {
-		if (socksAddress != null && socksPort != -1 && throughPort != -1)
-			return new IeeSearcher(builder, parser, socksAddress, socksPort,
+		if (socksAddress != null && throughPort != -1)
+			return new IeeSearcher(builder, parser, socksAddress,
 					throughPort);
 		return new IeeSearcher(builder, parser);
 
 	}
 
 	public PDFDownloader getPdfDownloader(String path) {
-		if (socksAddress != null && socksPort != -1 && throughPort != -1)
-			return new PDFDownloader(path, socksAddress, socksPort, throughPort);
+		if (socksAddress != null && throughPort != -1)
+			return new PDFDownloader(path, socksAddress,  throughPort);
 		return new PDFDownloader(path);
 	}
 }

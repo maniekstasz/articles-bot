@@ -30,27 +30,16 @@ public class StartSetting extends JDialog {
 	private JTextField hostTextField;
 	private JTextField portTextField;
 	private JPanel proxyPanel;
-	private JTextField socksPortTextField;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			StartSetting dialog = new StartSetting();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+
+
 
 	/**
 	 * Create the dialog.
 	 */
 	public StartSetting() {
 		setTitle("Proxy settings");
-		setBounds(450, 280, 368, 200);
+		setBounds(450, 280, 309, 185);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -80,7 +69,7 @@ public class StartSetting extends JDialog {
 		contentPanel.add(useProxyRadioButton);
 		{
 			JButton okButton = new JButton("OK");
-			okButton.setBounds(97, 127, 62, 23);
+			okButton.setBounds(95, 115, 62, 23);
 			contentPanel.add(okButton);
 			okButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -89,12 +78,11 @@ public class StartSetting extends JDialog {
 					if (proxyPanel.isVisible()) {
 
 						String host = hostTextField.getText();
-						int socksPort = Integer.parseInt(socksPortTextField
-								.getText());
+						
 						int throughPort = Integer.parseInt(portTextField
 								.getText());
 						new GuiController(new Controller(listener, host,
-								throughPort,socksPort));
+								throughPort));
 					} else {
 						new GuiController(new Controller(listener));
 					}
@@ -107,7 +95,7 @@ public class StartSetting extends JDialog {
 		}
 		{
 			JButton cancelButton = new JButton("Cancel");
-			cancelButton.setBounds(169, 127, 72, 23);
+			cancelButton.setBounds(167, 115, 72, 23);
 			contentPanel.add(cancelButton);
 			cancelButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -118,41 +106,33 @@ public class StartSetting extends JDialog {
 		}
 		proxyPanel = new JPanel();
 		proxyPanel.setVisible(false);
-		proxyPanel.setBounds(6, 63, 346, 53);
+		proxyPanel.setBounds(6, 55, 346, 53);
 		contentPanel.add(proxyPanel);
 		proxyPanel.setLayout(null);
 
 		JLabel lblNewLabel = new JLabel("host:");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel.setBounds(70, 4, 35, 14);
+		lblNewLabel.setBounds(10, 4, 35, 14);
 		proxyPanel.add(lblNewLabel);
 
 		hostTextField = new JTextField();
 		hostTextField.setText("127.0.0.1");
-		hostTextField.setBounds(107, 1, 217, 20);
+		hostTextField.setBounds(47, 1, 217, 20);
 		proxyPanel.add(hostTextField);
 		hostTextField.setColumns(10);
 
-		JLabel lblNewLabel_1 = new JLabel("connection port:");
+		JLabel lblNewLabel_1 = new JLabel("port:");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_1.setBounds(5, 29, 100, 14);
+		lblNewLabel_1.setBounds(5, 29, 40, 14);
 		proxyPanel.add(lblNewLabel_1);
 
 		portTextField = new JTextField();
-		portTextField.setText("80");
-		portTextField.setBounds(107, 26, 60, 20);
+		portTextField.setText("8080");
+		portTextField.setBounds(47, 26, 60, 20);
 		proxyPanel.add(portTextField);
 		portTextField.setColumns(10);
 
-		JLabel lblNewLabel_2 = new JLabel("socks port:");
-		lblNewLabel_2.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_2.setBounds(182, 29, 80, 14);
-		proxyPanel.add(lblNewLabel_2);
 
-		socksPortTextField = new JTextField();
-		socksPortTextField.setText("8080");
-		socksPortTextField.setBounds(264, 26, 60, 20);
-		proxyPanel.add(socksPortTextField);
-		socksPortTextField.setColumns(10);
+	
 	}
 }

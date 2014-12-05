@@ -2,12 +2,9 @@ package studia.articles.bot.searcher;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.ConnectException;
 import java.net.CookieHandler;
 import java.net.CookieManager;
-import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
@@ -20,15 +17,15 @@ public abstract class IeeConnector {
 	private Proxy proxy;
 
 	private boolean throughProxy = false;
-	public IeeConnector(String socksAddress, int socksPort, int throughPort) {
-		addr = new InetSocketAddress(socksAddress, socksPort).createUnresolved(
-				"localhost", throughPort);
+
+	public IeeConnector(String socksAddress,  int throughPort) {
+		addr = InetSocketAddress.createUnresolved(socksAddress, throughPort);
 		proxy = new Proxy(Proxy.Type.SOCKS, addr);
 		CookieHandler.setDefault(new CookieManager());
 		throughProxy = true;
 	}
-	
-	public IeeConnector(){
+
+	public IeeConnector() {
 		throughProxy = false;
 		CookieHandler.setDefault(new CookieManager());
 	}

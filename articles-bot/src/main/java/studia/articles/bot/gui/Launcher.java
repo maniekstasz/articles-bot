@@ -2,6 +2,7 @@ package studia.articles.bot.gui;
 
 import java.awt.EventQueue;
 
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 public class Launcher {
@@ -10,7 +11,9 @@ public class Launcher {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					new StartSetting();
+					StartSetting dialog = new StartSetting();
+					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					dialog.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

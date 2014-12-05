@@ -1,7 +1,6 @@
 package studia.articles.bot.controller;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,13 +13,9 @@ import org.jbibtex.BibTeXEntry;
 import org.jbibtex.BibTeXFormatter;
 import org.jbibtex.BibTeXParser;
 import org.jbibtex.Key;
-import org.jbibtex.ObjectResolutionException;
 import org.jbibtex.ParseException;
 import org.jbibtex.TokenMgrException;
 import org.jbibtex.Value;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 
 import studia.articles.bot.bibtex.BibeteXDatabaseBuilder;
 import studia.articles.bot.bibtex.BibtexUtil;
@@ -31,6 +26,9 @@ import studia.articles.bot.searcher.IeeSearcher;
 import studia.articles.bot.searcher.PDFDownloader;
 import studia.articles.bot.searcher.SearchQueryBuilder;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 public class Controller {
 
 	private IeeSearcher searcher;
@@ -40,11 +38,9 @@ public class Controller {
 	private final ControllerListener listener;
 	private ConnectorFactory connectorFactory;
 
-	public Controller(ControllerListener listener, String socksAddress,
-			int socksPort, int throughPort) {
+	public Controller(ControllerListener listener, String socksAddress, int throughPort) {
 		this.listener = listener;
-		connectorFactory = new ConnectorFactory(socksAddress, socksPort,
-				throughPort);
+		connectorFactory = new ConnectorFactory(socksAddress, throughPort);
 	}
 
 	public Controller(ControllerListener listener) {

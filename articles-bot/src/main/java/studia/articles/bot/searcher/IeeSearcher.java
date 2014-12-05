@@ -22,8 +22,8 @@ public class IeeSearcher extends IeeConnector {
 	boolean initialized = false;
 
 	public IeeSearcher(SearchQueryBuilder queryBuilder, ResponseParser parser,
-			int size, String socksAddress, int socksPort, int throughPort) throws JsonParseException, JsonMappingException, IOException {
-		super(socksAddress, socksPort, throughPort);
+			int size, String socksAddress, int throughPort) throws JsonParseException, JsonMappingException, IOException {
+		super(socksAddress,  throughPort);
 		this.queryBuilder = queryBuilder;
 		this.parser = parser;
 		this.size = size;
@@ -31,8 +31,8 @@ public class IeeSearcher extends IeeConnector {
 	}
 
 	public IeeSearcher(SearchQueryBuilder queryBuilder, ResponseParser parser,
-			String socksAddress, int socksPort, int throughPort) throws JsonParseException, JsonMappingException, IOException {
-		this(queryBuilder, parser, 100, socksAddress, socksPort, throughPort);
+			String socksAddress,  int throughPort) throws JsonParseException, JsonMappingException, IOException {
+		this(queryBuilder, parser, 100, socksAddress,  throughPort);
 	}
 	
 	public IeeSearcher(SearchQueryBuilder queryBuilder, ResponseParser parser)throws JsonParseException, JsonMappingException, IOException {

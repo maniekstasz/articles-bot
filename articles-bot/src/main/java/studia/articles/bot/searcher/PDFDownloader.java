@@ -6,8 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.ConnectException;
-import java.net.MalformedURLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,9 +19,8 @@ public class PDFDownloader extends IeeConnector {
 	private static final Pattern SRC_PATTERN = Pattern
 			.compile(".*src=\"(.*)\".*");
 
-	public PDFDownloader(String path, String socksAddress, int socksPort,
-			int throughPort) {
-		super(socksAddress, socksPort, throughPort);
+	public PDFDownloader(String path, String socksAddress, int throughPort) {
+		super(socksAddress, throughPort);
 		this.path = path;
 	}
 

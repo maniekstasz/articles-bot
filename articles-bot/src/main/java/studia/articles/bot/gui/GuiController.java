@@ -4,15 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 
 import studia.articles.bot.controller.Controller;
 import studia.articles.bot.searcher.SearchQueryBuilder;
 
 public class GuiController {
-	final static private String TITLE="title";
+	final static private String TITLE="IEEE xplorer searcher";
 	JFrame frame;
 	SearchPanel searchPanel;
 	ResultsPanel resultsPanel;

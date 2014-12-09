@@ -166,7 +166,8 @@ public class ResultsPanel extends JPanel implements ActionListener {
 				}
 
 				if (e.getClickCount() == 2 && col < lastColumn) {
-					new DocumentInfoFrame(currentlyDisplayedDocuments.get(row), guiController);
+					new DocumentInfoFrame(currentlyDisplayedDocuments.get(row),
+							guiController);
 				}
 			}
 		});
@@ -204,7 +205,7 @@ public class ResultsPanel extends JPanel implements ActionListener {
 				File file = fc.getSelectedFile();
 				guiController.getController().saveToBibetex(
 						file.getAbsolutePath());
-				//*********************
+				// *********************
 				Object[] options = { "Yes, please", "No, thanks" };
 				int n = JOptionPane
 						.showOptionDialog(guiController.getFrame(),
@@ -213,7 +214,9 @@ public class ResultsPanel extends JPanel implements ActionListener {
 								JOptionPane.QUESTION_MESSAGE, null, options,
 								options[0]);
 				if (n == 0) {
-					selectDirAndDownload(file.getAbsolutePath());
+					if (isPermited()) {
+						selectDirAndDownload(file.getAbsolutePath());
+					}
 				}
 
 			}
@@ -236,20 +239,22 @@ public class ResultsPanel extends JPanel implements ActionListener {
 	}
 
 	private void downloadPdf() {
+		if (isPermited()) {
+			JFileChooser fc = new JFileChooser();
+			fc.setDialogTitle("Select bibtex file");
 
-		JFileChooser fc = new JFileChooser();
-		fc.setDialogTitle("Select bibtex file");
+			int returnVal = fc.showOpenDialog(guiController.getFrame());
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				File bibtexFile = fc.getSelectedFile();
 
-		int returnVal = fc.showOpenDialog(guiController.getFrame());
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File bibtexFile = fc.getSelectedFile();
-			
-			selectDirAndDownload(bibtexFile.getAbsolutePath());
+				selectDirAndDownload(bibtexFile.getAbsolutePath());
 
+			}
 		}
 	}
 
 	private void selectDirAndDownload(String bibtexPath) {
+
 		JFileChooser fc = new JFileChooser();
 		fc.setDialogTitle("Select directory to save pdf files");
 		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -259,6 +264,16 @@ public class ResultsPanel extends JPanel implements ActionListener {
 			guiController.getController().downloadFiles(bibtexPath,
 					dirPath.getAbsolutePath());
 		}
+	}
+
+	private boolean isPermited() {
+		int n = JOptionPane.showConfirmDialog(this,
+				"Do you have IEEE's permission to automatically download the files ", "",
+				JOptionPane.YES_NO_OPTION);
+		if (n == JOptionPane.YES_OPTION) {
+			return true;
+		}
+		return false;
 	}
 
 	private void next() {

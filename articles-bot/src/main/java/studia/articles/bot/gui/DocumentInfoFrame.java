@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,8 +24,9 @@ public class DocumentInfoFrame extends JFrame {
 
 	private static final long serialVersionUID = 1995430866542162143L;
 	private Document document;
-	private JButton openPDFButton=new JButton("full text");
+	private JButton openPDFButton = new JButton("full text");
 	private GuiController guiController;
+
 	public DocumentInfoFrame(Document document, GuiController guiController) {
 		this.document = document;
 		this.guiController = guiController;
@@ -53,36 +56,36 @@ public class DocumentInfoFrame extends JFrame {
 	private void fill() {
 
 		openPDFButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (Desktop.isDesktopSupported()) {
-				    try {
-				    	String fileAbsolutePath = guiController.getController().downloadDocument(document);
-				    	System.out.println(fileAbsolutePath);
-				    	if(fileAbsolutePath == null) return;
-				        File myFile = new File(fileAbsolutePath);
-				        Desktop.getDesktop().open(myFile);
-				    } catch (IOException ex) {
-				    	//custom title, error icon
-				    	JOptionPane.showMessageDialog(DocumentInfoFrame.this,
-				    	    "No application registered for PDFs",
-				    	    "",
-				    	    JOptionPane.ERROR_MESSAGE);
-				    } catch(IllegalArgumentException ex){
-				    	JOptionPane.showMessageDialog(DocumentInfoFrame.this,
-					    	    "No access to full text",
-					    	    "",
-					    	    JOptionPane.ERROR_MESSAGE);
-				    }
+
+				Desktop desktop = Desktop.isDesktopSupported() ? Desktop
+						.getDesktop() : null;
+				if (desktop != null
+						&& desktop.isSupported(Desktop.Action.BROWSE)) {
+					try {
+						URI url = new URI(document.getPdfUrl());
+						desktop.browse(url);
+					} catch (Exception exc) {
+						exc.printStackTrace();
+					}
+				} else {
+					JOptionPane
+							.showMessageDialog(DocumentInfoFrame.this,
+									"No default browser", "",
+									JOptionPane.ERROR_MESSAGE);
+
 				}
+
 				
+
 			}
 		});
 		JTextPane infoPane = new JTextPane();
 		infoPane.setContentType("text/html");
 		infoPane.setText(createInfo());
-		
+
 		Font font = infoPane.getFont();
 		Font boldFont = new Font(font.getFontName(), Font.PLAIN,
 				font.getSize() + 2);
@@ -93,14 +96,12 @@ public class DocumentInfoFrame extends JFrame {
 		// d.height=width*height/d.width/2;
 		infoPane.setPreferredSize(d);
 
-	
-
 		infoPane.setBackground(Color.WHITE);
 		infoPane.setOpaque(true);
-		
+
 		JScrollPane jsp = new JScrollPane(infoPane);
 		this.setLayout(new BorderLayout());
-		this.add(openPDFButton,BorderLayout.SOUTH);
-		this.add(jsp,BorderLayout.CENTER);
+		this.add(openPDFButton, BorderLayout.SOUTH);
+		this.add(jsp, BorderLayout.CENTER);
 	}
 }

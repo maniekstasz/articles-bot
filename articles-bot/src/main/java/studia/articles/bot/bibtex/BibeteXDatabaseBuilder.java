@@ -26,7 +26,7 @@ public class BibeteXDatabaseBuilder {
 				Style.BRACED));
 		bte.addField(BibTeXEntry.KEY_JOURNAL,
 				new StringValue(doc.getPublisher(), Style.BRACED));
-		bte.addField(new Key("pdfUrl"), new StringValue(doc.getPdfUrl(),
+		bte.addField(BibTeXEntry.KEY_URL, new StringValue(doc.getPdfUrl(),
 				Style.BRACED));
 		String keywords = "";
 		if (doc.getTerms() != null)

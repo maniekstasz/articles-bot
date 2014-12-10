@@ -150,7 +150,7 @@ public class Controller {
 								.getEntries().size(), i);
 
 						try {
-							Value pdfURL = en.getField(new Key("pdfUrl"));
+							Value pdfURL = en.getField(BibTeXEntry.KEY_URL);
 							if (pdfURL == null)
 								throw new IOException(
 										"No pdf url field in bibetext");
